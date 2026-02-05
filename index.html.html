@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+    overflow: hidden;
+}
+
+/* PAGE LAYOUT */
+#page1, #page2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 1.2s ease;
+}
+
+/* PAGE 1 BACKGROUND */
+#page1 {
+    background:
+        radial-gradient(circle at top, rgba(255,255,255,0.5), transparent 60%),
+        linear-gradient(135deg, #ffafbd, #ffc3a0, #ff77a9);
+}
+
+/* PAGE 2 BACKGROUND */
+#page2 {
+    background: linear-gradient(to bottom, #ffe6f0, #ffffff);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* TEXT */
+h1 {
+    color: #b30059;
+    margin-bottom: 18px;
+    text-shadow: 0 6px 20px rgba(255, 77, 136, 0.5);
+}
+
+h2 {
+    color: #ff4d88;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+/* BUTTONS */
+button {
+    padding: 14px 32px;
+    font-size: 18px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(255, 77, 136, 0.4);
+}
+
+#yes {
+    background: linear-gradient(to right, #ff4d88, #ff85a2);
+    color: white;
+}
+
+#no {
+    background: #555;
+    color: white;
+    position: absolute;
+}
+
+/* HEARTS */
+.heart {
+    position: absolute;
+    color: rgba(255,255,255,0.6);
+    font-size: 18px;
+    animation: floatUp 8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(-10vh);
+        opacity: 1;
+    }
+}
+
+/* FLOWERS */
+.big-flower {
+    font-size: 80px;
+    animation: float 3s infinite ease-in-out;
+    margin-bottom: 10px;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+    100% { transform: translateY(0); }
+}
+
+/* CAMERA */
+.camera-box {
+    margin-top: 16px;
+    width: 260px;
+    height: 340px;
+    border-radius: 25px;
+    background: #000;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(255, 77, 136, 0.4);
+    border: 4px solid #ff85a2;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-text {
+    margin-top: 10px;
+    color: #ff4d88;
+    font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1">
+    <h1>Will you be my Valentine? 💕</h1>
+    <button id="yes">YES 💖</button>
+    <button id="no">NO 🙄</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2">
+    <h1>Happy Valentine’s Day 💕</h1>
+    <h2>You make this day special 💖</h2>
+
+    <div class="big-flower">🌹🌸💐</div>
+
+    <!-- CAMERA PREVIEW -->
+    <div class="camera-box">
+        <video id="camera" autoplay playsinline></video>
+    </div>
+
+    <div class="camera-text">📸 Capturing this moment forever</div>
+
+    <!-- MUSIC -->
+    <audio id="music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0a5e9f7d28.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+const music = document.getElementById("music");
+const video = document.getElementById("camera");
+
+/* NO button escapes */
+noBtn.addEventListener("mouseover", () => {
+    noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 60) + "px";
+});
+
+/* YES → Page 2 + Music + Camera */
+yesBtn.addEventListener("click", async () => {
+    page1.style.opacity = "0";
+    page2.style.opacity = "1";
+    page2.style.pointerEvents = "auto";
+    music.play();
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+    } catch {
+        alert("Camera access denied 😢");
+    }
+});
+
+/* Floating hearts */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+}, 400);
+</script>
+
+</body>
+</html>
